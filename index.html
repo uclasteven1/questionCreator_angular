@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Quiz Question Creator</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Internal CSS -->
+    <link href="./css/style.css" rel="stylesheet">
+</head>
+
+<body ng-cloak>
+    <div class="container" ng-controller="QuestionsController">
+        <h2 class="mb-3">{{title}}</h2>
+        <div class="row">
+            <div class="col col-12 mb-3 input-group">
+                <label class="sr-only" for="inputQuestion">Enter question text</label>
+                <div class="input-group-prepend">
+                    <h4 class="input-group-text">Question #{{questions.length + 1}}</h4>
+                </div>
+                <input class="form-control" ng-model="draftQuestion.questionText" id="inputQuestion"/>
+            </div>
+            <div class="col col-6 mb-3 input-group">
+                <label class="sr-only" for="inputOpt1">Option 1</label>
+                <div class="input-group-prepend">
+                    <h5 class="input-group-text">Option #1</h5>
+                </div>
+                <input class="form-control" ng-model="draftQuestion.option1" id="inputOpt1"/>
+            </div>
+            <div class="col col-6 mb-3 input-group">
+                <label class="sr-only" for="inputOpt2">Option 2</label>
+                <div class="input-group-prepend">
+                    <h5 class="input-group-text">Option #2</h5>
+                </div>
+                <input class="form-control" ng-model="draftQuestion.option2" id="inputOpt2"/>
+            </div>
+            <div class="col col-6 mb-3 input-group">
+                <label class="sr-only" for="inputOpt3">Option 3</label>
+                <div class="input-group-prepend">
+                    <h5 class="input-group-text">Option #3</h5>
+                </div>
+                <input class="form-control" ng-model="draftQuestion.option3" id="inputOpt3"/>
+            </div>
+            <div class="col col-6 mb-3 input-group">
+                <label class="sr-only" for="inputOpt4">Option 4</label>
+                <div class="input-group-prepend">
+                    <h5 class="input-group-text">Option #4</h5>
+                </div>
+                <input class="form-control" ng-model="draftQuestion.option4" id="inputOpt4"/>
+            </div>
+            <div class="col col-12">
+                <div class="row justify-content-between align-items-center">
+                    <div class="input-group col">
+                        <label class="sr-only" for="formAnswer">Select correct answer</label>
+                        <div class="input-group-prepend">
+                            <h5 class="input-group-text">Select correct answer:</h5>
+                        </div>
+                        <select id="formAnswer" class="form-control" ng-model="draftQuestion.answer">
+                            <option value="1" selected>Option #1</option>
+                            <option value="2">Option #2</option>
+                            <option value="3">Option #3</option>
+                            <option value="4">Option #4</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button ng-click="create(draftQuestion)" class="btn btn-success">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <ul class="list-group">
+                    <li class="list-group-item active">Questions</li>
+                    <li ng-repeat="question in questions" class="list-group-item">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h5>Question #{{questions.indexOf(question) + 1}}</h5>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <span ng-if="!question.editing">{{question.questionText}}</span>
+                                    <input ng-if="question.editing" ng-model="question.questionText" class="w-100 d-block"/>
+                                </h6>
+                                <ol>
+                                    <li>
+                                        <span ng-if="!question.editing">{{question.option1}}</span>
+                                        <input ng-if="question.editing" ng-model="question.option1" class="w-100 d-block"/>
+                                    </li>
+                                    <li>
+                                        <span ng-if="!question.editing">{{question.option2}}</span>
+                                        <input ng-if="question.editing" ng-model="question.option2" class="w-100 d-block"/>
+                                    </li>
+                                    <li>
+                                        <span ng-if="!question.editing">{{question.option3}}</span>
+                                        <input ng-if="question.editing" ng-model="question.option3" class="w-100 d-block"/>
+                                    </li>
+                                    <li>
+                                        <span ng-if="!question.editing">{{question.option4}}</span>
+                                        <input ng-if="question.editing" ng-model="question.option4" class="w-100 d-block"/>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <div class="col">
+                                    <span ng-if="!question.editing">Answer: Option #{{question.answer}}</span>
+                                    <select ng-if="question.editing" class="form-control" ng-model="question.answer">
+                                        <option value="1">Option #1</option>
+                                        <option value="2">Option #2</option>
+                                        <option value="3">Option #3</option>
+                                        <option value="4">Option #4</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button ng-click="remove(question)" class="btn btn-danger float-right">X</button>
+                                    <button ng-if="!question.editing" ng-click="edit(question)" class="btn btn-success float-right"><i class="fa fa-pencil-alt"></i></button>
+                                    <button ng-if="question.editing" ng-click="save(question)" class="btn btn-primary float-right"><i class="fa fa-save"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li ng-if="questions.length == 0" class="list-group-item">No questions have been written yet</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="js/index.js"></script>
+
+  </body>
+</html>
